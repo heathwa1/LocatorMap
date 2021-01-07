@@ -17,11 +17,10 @@ var dark = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?
 });
 
 
-var map = L.map("map", {layers:[light,dark]}).fitWorld();
+var map = L.map("map", {layers:[light]}).fitWorld();
 var baseLayers = {"Light":light, "Dark":dark};
 var controlLayers = L.control.layers(baseLayers).addTo(map);
 
-L.easyButton()
 
 function onLocationFound(e) {
     var radius = e.accuracy; //this defines a variable radius as the accuracy value returned by the locate method. The unit is meters.
@@ -57,6 +56,7 @@ function onLocationError(e) {
 }
 
 map.on('locationerror', onLocationError);
+
 
 
 map.locate({setView: true, maxZoom: 16});
