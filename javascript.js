@@ -16,15 +16,19 @@ var dark = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?
     zoomOffset: -1,
 });
 
-var map = L.map("map", {layers:[light]}).fitWorld();
 
+var map = L.map("map", {layers:[light,dark]}).fitWorld();
+var baseLayers = {"Light":light, "Dark":dark};
+var controlLayers = L.control.layers(baseLayers).addTo(map);
+
+L.easyButton()
 
 function onLocationFound(e) {
     var radius = e.accuracy; //this defines a variable radius as the accuracy value returned by the locate method. The unit is meters.
 
     L.marker(e.latlng).addTo(map)  //this adds a marker at the lat and long returned by the locate function.
         .bindPopup("You are within " + Math.round(radius * 3.28084) + " feet of this point").openPopup(); //this binds a popup to the marker. The text of the popup is defined here as well. Note that we multiply the radius by 3.28084 to convert the radius from meters to feet and that we use Math.round to round the conversion to the nearest whole number.
-        if (radius<= 100) {
+        if (radius <= 100) {
             L.circle(e.latlng, radius, {color: 'green'}).addTo(map);
         }
         else {
@@ -46,11 +50,13 @@ function onLocationFound(e) {
         }
 }
 
+
 map.on('locationfound', onLocationFound); //this is the event listener
 function onLocationError(e) {
   alert(e.message);
 }
 
 map.on('locationerror', onLocationError);
+
 
 map.locate({setView: true, maxZoom: 16});
