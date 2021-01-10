@@ -20,6 +20,11 @@ var dark = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?
 var map = L.map("map", {layers:[light]}).fitWorld();
 var baseLayers = {"Light":light, "Dark":dark};
 var controlLayers = L.control.layers(baseLayers).addTo(map);
+var geoBtn = document.getElementById("button");
+
+
+
+
 
 
 function onLocationFound(e) {
@@ -33,6 +38,8 @@ function onLocationFound(e) {
         else {
             L.circle(e.latlng, radius, {color: 'red'}).addTo(map);
         }
+
+
     // L.circle(e.latlng, radius).addTo(map); //this adds a circle to the map centered at the lat and long returned by the locate function. Its radius is set to the var radius defined above.
     var times = SunCalc.getTimes(new Date(), e.latitude, e.longitude);
     var sunrise = times.sunrise.getHours();
@@ -54,9 +61,9 @@ map.on('locationfound', onLocationFound); //this is the event listener
 function onLocationError(e) {
   alert(e.message);
 }
+geoBtn.PerfromClick.locate;
 
 map.on('locationerror', onLocationError);
-
 
 
 map.locate({setView: true, maxZoom: 16});
