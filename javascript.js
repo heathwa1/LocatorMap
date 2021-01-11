@@ -15,15 +15,36 @@ var dark = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?
     tileSize: 512,
     zoomOffset: -1,
 });
+var customControl = L.Control.extend ({
+  options: {
+    position: 'topleft'
+  },
+  onAdd: function(map) {
+    var geoBtn = L.DomUtil.create('geoBtn', 'button');
+    geoBtn.onmouseover = function() {
+      geoBtn.style.backgroundColor='pink';
+    }
+    geoBtn.onclick = function() {
 
+      console.log('buttonClicked');
+    }
+    return geoBtn;
+  }
+});
 
+var readyState =function(e) {
 var map = L.map("map", {layers:[light]}).fitWorld();
 var baseLayers = {"Light":light, "Dark":dark};
 var controlLayers = L.control.layers(baseLayers).addTo(map);
-var geoBtn = document.getElementById("button");
+map.addControl(new customControl());
+}
+window.addEventListener("DOMContentLoaded", readyState);
+// var geoBtn = document.createElement("button");
 
 
-
+// L.easyButton('<span class="target">&target;</span>',function() {
+//   window.confirm('Allow access to location?');
+// }).addTo(map);
 
 
 
@@ -57,11 +78,11 @@ function onLocationFound(e) {
 }
 
 
-map.on('locationfound', onLocationFound); //this is the event listener
+map.on('locationfound',onLocationFound); //this is the event listener
 function onLocationError(e) {
   alert(e.message);
-}
-geoBtn.PerfromClick.locate;
+};
+
 
 map.on('locationerror', onLocationError);
 
