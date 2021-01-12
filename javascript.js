@@ -15,36 +15,44 @@ var dark = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?
     tileSize: 512,
     zoomOffset: -1,
 });
-var customControl = L.Control.extend ({
-  options: {
-    position: 'topleft'
-  },
-  onAdd: function(map) {
-    var geoBtn = L.DomUtil.create('geoBtn', 'button');
-    geoBtn.onmouseover = function() {
-      geoBtn.style.backgroundColor='pink';
-    }
-    geoBtn.onclick = function() {
 
-      console.log('buttonClicked');
-    }
-    return geoBtn;
-  }
-});
 
-var readyState =function(e) {
+
 var map = L.map("map", {layers:[light]}).fitWorld();
 var baseLayers = {"Light":light, "Dark":dark};
 var controlLayers = L.control.layers(baseLayers).addTo(map);
-map.addControl(new customControl());
-}
-window.addEventListener("DOMContentLoaded", readyState);
-// var geoBtn = document.createElement("button");
 
-
-// L.easyButton('<span class="target">&target;</span>',function() {
-//   window.confirm('Allow access to location?');
-// }).addTo(map);
+// set properties for button when clicked
+L.easyButton({
+  states: [
+    {
+      stateName: 'unloaded',
+      icon: '<span class="current">&curren;</span>',
+      title: 'load image',
+      onClick: function(control) {
+        control.state("loading");
+        control._map.on('locationfound', function(e) {
+          this.setView(e.latlng, 16);
+          control.state('loaded');
+        });
+        control._map.on('locationerror', function(){
+          control.state('error');
+        });
+        control._map.locate()
+      }
+    }, {
+      stateName: 'loading',
+      icon: '<span class="curLoad">&curren;</span>'
+    }, {
+      stateName: 'loaded',
+      icon: '<span class="target">&target;</span>'
+    }, {
+      stateName: 'error',
+      icon: '<span class="excl">&excl;</span>',
+      title: 'location not found'
+    }
+  ]
+}).addTo(map);
 
 
 
@@ -78,13 +86,12 @@ function onLocationFound(e) {
 }
 
 
-map.on('locationfound',onLocationFound); //this is the event listener
-function onLocationError(e) {
-  alert(e.message);
-};
-
-
-map.on('locationerror', onLocationError);
+// map.on('locationfound',onLocationFound); //this is the event listener
+// function onLocationError(e) {
+//   alert(e.message);
+// }
+//
+// map.on('locationerror', onLocationError);
 
 
 map.locate({setView: true, maxZoom: 16});

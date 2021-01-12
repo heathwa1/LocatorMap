@@ -24,5 +24,13 @@ html, body, #map {
 }
 .target {
   font-size: 2.5em;
-  color: red;
+  color: green;
+}
+.current {
+  font-size: 2.5em;
+  color: blue;
+}
+.curren1 {
+  font-size: 2.5em;
+  color:red;
 }
