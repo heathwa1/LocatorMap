@@ -22,45 +22,34 @@ var map = L.map("map", {layers:[light]}).fitWorld();
 var baseLayers = {"Light":light, "Dark":dark};
 var controlLayers = L.control.layers(baseLayers).addTo(map);
 
+
 // set properties for button when clicked
-L.easyButton({
-  states: [
-    {
-      stateName: 'unloaded',
-      icon: '<span class="current">&curren;</span>',
-      title: 'load image',
-      onClick: function(control) {
-        control.state("loading");
-        control._map.on('locationfound', function(e) {
-          this.setView(e.latlng, 16);
-          control.state('loaded');
-        });
-        control._map.on('locationerror', function(){
-          control.state('error');
-        });
-        control._map.locate()
-      }
-    }, {
-      stateName: 'loading',
-      icon: '<span class="curLoad">&curren;</span>'
-    }, {
-      stateName: 'loaded',
-      icon: '<span class="target">&target;</span>'
-    }, {
-      stateName: 'error',
-      icon: '<span class="excl">&excl;</span>',
-      title: 'location not found'
+
+var btn = L.easyButton('<span class="curren">&curren;</span>', function(btn, overlay) {
+    function on() {
+      document.getElementById("overlay").style.display = "block";
     }
-  ]
-}).addTo(map);
+    function off() {
+      document.getElementById("overlay").style.display = "none";
+    }
+
+//     locatePopup.setLatLng(map.getCenter()).openOn(map);
+// map.on('popupclose', function(f) {
+    map.locate({setView: true, maxZoom: 14});
+
+// });
+
+
+  }).addTo(map);
 
 
 
 function onLocationFound(e) {
     var radius = e.accuracy; //this defines a variable radius as the accuracy value returned by the locate method. The unit is meters.
 
-    L.marker(e.latlng).addTo(map)  //this adds a marker at the lat and long returned by the locate function.
-        .bindPopup("You are within " + Math.round(radius * 3.28084) + " feet of this point").openPopup(); //this binds a popup to the marker. The text of the popup is defined here as well. Note that we multiply the radius by 3.28084 to convert the radius from meters to feet and that we use Math.round to round the conversion to the nearest whole number.
+    L.marker(e.latlng, {bubblingMouseEvents: true}).addTo(map)  //this adds a marker at the lat and long returned by the locate function.
+        .bindPopup("You are within " + Math.round(radius * 3.28084) + " feet of this point").closePopup(); //this binds a popup to the marker. The text of the popup is defined here as well. Note that we multiply the radius by 3.28084 to convert the radius from meters to feet and that we use Math.round to round the conversion to the nearest whole number.
+
         if (radius <= 100) {
             L.circle(e.latlng, radius, {color: 'green'}).addTo(map);
         }
@@ -86,12 +75,10 @@ function onLocationFound(e) {
 }
 
 
-// map.on('locationfound',onLocationFound); //this is the event listener
-// function onLocationError(e) {
-//   alert(e.message);
-// }
-//
-// map.on('locationerror', onLocationError);
 
+map.on('locationfound',onLocationFound); //this is the event listener
+function onLocationError(e) {
+  alert(e.message);
+}
 
-map.locate({setView: true, maxZoom: 16});
+map.on('locationerror', onLocationError);
