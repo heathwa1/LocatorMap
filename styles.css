@@ -32,7 +32,8 @@ html, body, #map {
   position: absolute;
   top: 50%;
   left: 50%;
-  font-size: 50px;
+  width: 30%;
+  font-size:30px;
   color: white;
   z-index: 1001;
   transform: translate(-50%,-50%);

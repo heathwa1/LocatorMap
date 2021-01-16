@@ -31,10 +31,10 @@ function off() {
 }
 
 // add button to initiate location services for finding user
-// var btn = L.easyButton('<span class="curren">&curren;</span>', function(btn, map) {
-//     // command to find location once button is clicked
-//       map.locate({setView: true, maxZoom: 14});
-//     }).addTo(map);
+var btn = L.easyButton('<span class="curren">&curren;</span>', function(btn, map) {
+    // command to find location once button is clicked
+      map.locate({setView: true, maxZoom: 14});
+    }).addTo(map);
 // var allowLoc = L.easyButton({
 //   states: [{
 //       stateName: 'findMe',
