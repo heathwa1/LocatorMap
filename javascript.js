@@ -17,38 +17,50 @@ var dark = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?
 });
 
 
-
+// add base layers and controls to switch layers manually
 var map = L.map("map", {layers:[light]}).fitWorld();
 var baseLayers = {"Light":light, "Dark":dark};
 var controlLayers = L.control.layers(baseLayers).addTo(map);
 
+// add overlay to map before finding location
+function on() {
+  document.getElementById("overlay").style.display = "block";
+}
+function off() {
+  document.getElementById("overlay").style.display = "none";
+}
 
-// set properties for button when clicked
-
-var btn = L.easyButton('<span class="curren">&curren;</span>', function(btn, overlay) {
-    function on() {
-      document.getElementById("overlay").style.display = "block";
-    }
-    function off() {
-      document.getElementById("overlay").style.display = "none";
-    }
-
-//     locatePopup.setLatLng(map.getCenter()).openOn(map);
-// map.on('popupclose', function(f) {
-    map.locate({setView: true, maxZoom: 14});
-
+// add button to initiate location services for finding user
+// var btn = L.easyButton('<span class="curren">&curren;</span>', function(btn, map) {
+//     // command to find location once button is clicked
+//       map.locate({setView: true, maxZoom: 14});
+//     }).addTo(map);
+// var allowLoc = L.easyButton({
+//   states: [{
+//       stateName: 'findMe',
+//       icon: '<span class="curren">&curren;</span>',
+//       onClick: function(control) {
+//         map.drawMarker(map.locate);
+//         control.state('forgetMe');
+//       }
+//   }, {
+//     stateName: 'forgetMe',
+//     icon: '<span class="target">&target;</span>',
+//     onClick: function(control) {
+//       map.removeMarker(map.locate);
+//       control.state('findMe');
+//     }
+//   }]
 // });
-
-
-  }).addTo(map);
+// allowLoc.addTo(map);
 
 
 
 function onLocationFound(e) {
     var radius = e.accuracy; //this defines a variable radius as the accuracy value returned by the locate method. The unit is meters.
 
-    L.marker(e.latlng, {bubblingMouseEvents: true}).addTo(map)  //this adds a marker at the lat and long returned by the locate function.
-        .bindPopup("You are within " + Math.round(radius * 3.28084) + " feet of this point").closePopup(); //this binds a popup to the marker. The text of the popup is defined here as well. Note that we multiply the radius by 3.28084 to convert the radius from meters to feet and that we use Math.round to round the conversion to the nearest whole number.
+    L.marker(e.latlng).addTo(map)  //this adds a marker at the lat and long returned by the locate function.
+        .bindPopup("You are within " + Math.round(radius * 3.28084) + " feet of this point").openPopup(); //this binds a popup to the marker. The text of the popup is defined here as well. Note that we multiply the radius by 3.28084 to convert the radius from meters to feet and that we use Math.round to round the conversion to the nearest whole number.
 
         if (radius <= 100) {
             L.circle(e.latlng, radius, {color: 'green'}).addTo(map);
@@ -56,9 +68,10 @@ function onLocationFound(e) {
         else {
             L.circle(e.latlng, radius, {color: 'red'}).addTo(map);
         }
+       //this adds a circle to the map centered at the lat and long returned by the locate function. Its radius is set to the var radius defined above.
 
 
-    // L.circle(e.latlng, radius).addTo(map); //this adds a circle to the map centered at the lat and long returned by the locate function. Its radius is set to the var radius defined above.
+
     var times = SunCalc.getTimes(new Date(), e.latitude, e.longitude);
     var sunrise = times.sunrise.getHours();
     var sunset = times.sunset.getHours();
@@ -74,7 +87,8 @@ function onLocationFound(e) {
         }
 }
 
-
+overlay.addEventListener('load', on);
+overlay.addEventListener('click', off);
 
 map.on('locationfound',onLocationFound); //this is the event listener
 function onLocationError(e) {
