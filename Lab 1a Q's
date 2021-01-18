@@ -1,0 +1,4 @@
+1. If the setView isn't set in the locate options then the map defaults to world view. The users location may be found, but the map will not recenter to the users location.
+2. a).The geolocation documentation suggests that there is a 95% confidence level in both the location and altitude accuracy.
+   b). A heading of 135 would be headed in the SE direction. If you consider N to be at 0, following clockwise to 135 would be between 90, which is E and 180 which is S. The       heading will only be recognized if there is some type of movement and the device is not stationary.
+3. 
