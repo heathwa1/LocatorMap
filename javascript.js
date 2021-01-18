@@ -31,24 +31,27 @@ function off() {
 }
 
 // add button to initiate location services for finding user
-var btn = L.easyButton('<span class="curren">&curren;</span>', function(btn, map) {
+var btn = L.easyButton('<i class="fas fa-location-arrow"></i>', function(btn, map) {
     // command to find location once button is clicked
-      map.locate({setView: true, maxZoom: 14});
-    }).addTo(map);
+   map.locate({setView: true, maxZoom: 16});
+ }).addTo(map);
+// var btn = L.easyButton('<span class="curren">&curren;</span>', function(btn, map) {
+//     map.stopLocate({setView: false, maxZoom: 14});
+
 // var allowLoc = L.easyButton({
 //   states: [{
 //       stateName: 'findMe',
 //       icon: '<span class="curren">&curren;</span>',
 //       onClick: function(control) {
-//         map.drawMarker(map.locate);
-//         control.state('forgetMe');
+//         map.locate({setView:true, maxZoom:14});
+//         control.addTo('forgetMe');
 //       }
 //   }, {
 //     stateName: 'forgetMe',
 //     icon: '<span class="target">&target;</span>',
 //     onClick: function(control) {
-//       map.removeMarker(map.locate);
-//       control.state('findMe');
+//         map.stopLocate({setView:false,keepCurrentZoomLevel: true});
+//       control.remove('findMe');
 //     }
 //   }]
 // });
@@ -59,19 +62,21 @@ var btn = L.easyButton('<span class="curren">&curren;</span>', function(btn, map
 function onLocationFound(e) {
     var radius = e.accuracy; //this defines a variable radius as the accuracy value returned by the locate method. The unit is meters.
 
-    L.marker(e.latlng).addTo(map)  //this adds a marker at the lat and long returned by the locate function.
+    L.marker(e.latlng).addTo(map)
+
+      //this adds a marker at the lat and long returned by the locate function.
         .bindPopup("You are within " + Math.round(radius * 3.28084) + " feet of this point").openPopup(); //this binds a popup to the marker. The text of the popup is defined here as well. Note that we multiply the radius by 3.28084 to convert the radius from meters to feet and that we use Math.round to round the conversion to the nearest whole number.
 
         if (radius <= 100) {
             L.circle(e.latlng, radius, {color: 'green'}).addTo(map);
         }
         else {
-            L.circle(e.latlng, radius, {color: 'red'}).addTo(map);
+            L.circle(e.latlng, radius, {color: 'red', opacity:0.4}).addTo(map);
         }
+
        //this adds a circle to the map centered at the lat and long returned by the locate function. Its radius is set to the var radius defined above.
 
-
-
+       // sets info on time of day from users location changing dk/lt layers
     var times = SunCalc.getTimes(new Date(), e.latitude, e.longitude);
     var sunrise = times.sunrise.getHours();
     var sunset = times.sunset.getHours();
@@ -87,12 +92,15 @@ function onLocationFound(e) {
         }
 }
 
+
+    // listener for overlay on load then close on click
 overlay.addEventListener('load', on);
 overlay.addEventListener('click', off);
 
-map.on('locationfound',onLocationFound); //this is the event listener
-function onLocationError(e) {
-  alert(e.message);
-}
+ //this is the event listener
+map.on('locationfound',onLocationFound);
 
+  function onLocationError(e) {
+    alert(e.message);
+}
 map.on('locationerror', onLocationError);
