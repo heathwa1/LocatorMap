@@ -1,0 +1,2 @@
+1. If there is no specification in the setView option for map.locate then the map is set to the world view. This leaves the users location marked on the map, but the map is not recentered to the users location.
+2. 
