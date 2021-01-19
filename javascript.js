@@ -32,31 +32,8 @@ function off() {
 
 // add button to initiate location services for finding user
 var btn = L.easyButton('<i class="fas fa-location-arrow"></i>', function(btn, map) {
-    // command to find location once button is clicked
-   map.locate({setView: true, maxZoom: 16});
+    map.locate({setView: true, maxZoom: 16});
  }).addTo(map);
-// var btn = L.easyButton('<span class="curren">&curren;</span>', function(btn, map) {
-//     map.stopLocate({setView: false, maxZoom: 14});
-
-// var allowLoc = L.easyButton({
-//   states: [{
-//       stateName: 'findMe',
-//       icon: '<span class="curren">&curren;</span>',
-//       onClick: function(control) {
-//         map.locate({setView:true, maxZoom:14});
-//         control.addTo('forgetMe');
-//       }
-//   }, {
-//     stateName: 'forgetMe',
-//     icon: '<span class="target">&target;</span>',
-//     onClick: function(control) {
-//         map.stopLocate({setView:false,keepCurrentZoomLevel: true});
-//       control.remove('findMe');
-//     }
-//   }]
-// });
-// allowLoc.addTo(map);
-
 
 
 function onLocationFound(e) {
@@ -99,8 +76,7 @@ overlay.addEventListener('click', off);
 
  //this is the event listener
 map.on('locationfound',onLocationFound);
-
-  function onLocationError(e) {
-    alert(e.message);
+function onLocationError(e) {
+  alert(e.message);
 }
 map.on('locationerror', onLocationError);
